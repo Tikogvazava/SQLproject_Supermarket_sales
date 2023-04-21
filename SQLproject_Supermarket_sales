@@ -1,5 +1,5 @@
 /* 
-The following Data is from Kaggle Database - Supermerket Sales. Split Data into two tables in Excel and then import these two tables into BigQuery.
+The following Data is from Kaggle Database - Supermerket Sales. Split the Data into two tables in Excel and then import these two tables into BigQuery.
 Skills used: Joins, CTE's, Temp Tables, Windows Functions, Aggregate Functions, Creating Views, Converting Data Types
 */
 
