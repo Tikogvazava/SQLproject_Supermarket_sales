@@ -22,6 +22,17 @@ FROM sales.supermarket_sales_2
 GROUP BY Branch 
 ORDER BY Invoice_ID_count ASC
 
+-- Finding out what product line is the most popular by comparing total quantities sold across different product lines. 
+Select Distinct Product_line, sum(Quantity) AS Total_quantity_sold 
+From sales.supermarket_sales_1
+Group By Product_line
+Order By Total_quantity_sold Desc
+
+-- Finding out which supermarket generated the highest revenue and rounding the generated values to the nearest tenth. 
+SELECT ROUND(SUM(Unit_price*Quantity), 1) AS Total_revenue, Branch
+FROM sales.supermarket_sales_1
+GROUP BY Branch
+
 -- Finding out how many invoices have been generated for female and male customers. 
 SELECT COUNT(Gender) AS Purchases_by_female
 FROM sales.supermarket_sales_1
