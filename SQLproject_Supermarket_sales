@@ -49,3 +49,17 @@ FROM sales.supermarket_sales_1 AS sales_1
 INNER JOIN sales.supermarket_sales_2 AS sales_2 ON sales_1.Invoice_ID=sales_2.Invoice_ID
 WHERE sales_1.Gender='Female' AND sales_1.Customer_type='Normal' AND sales_2.Payment='Ewallet' AND sales_1.City='Mandalay' AND sales_2.Rating>=7
 ORDER BY sales_2.Rating Desc
+
+-- Using case statement to find out how many customers have bought between 1-4, 4-7 and 7> items and group them into 'Low', 'Average', 'High' to see the trend - Less people purchasing more items. 
+SELECT count(Invoice_ID) AS Customers_Count,
+CASE WHEN Quantity BETWEEN 1 AND 4 THEN 'Low 1-4'
+WHEN Quantity Between 4 AND 7 THEN 'Average 4-7'
+ELSE 'High >7'
+END AS Quantity_of_items_purchased
+FROM sales.supermarket_sales_1 AS sales_1 
+GROUP BY
+CASE WHEN Quantity BETWEEN 1 AND 4 THEN 'Low 1-4'
+WHEN Quantity Between 4 AND 7 THEN 'Average 4-7'
+ELSE 'High >7'
+END 
+
