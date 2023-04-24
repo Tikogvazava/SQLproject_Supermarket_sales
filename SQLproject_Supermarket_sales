@@ -89,6 +89,157 @@ FROM
 Group By Branch
 Order By Max_quantity_sold Desc
 
+--What products make the greatest contribution to the revenue for each branch? Contribution of product categories to the overall revenue for each Supermarket 
+
+SELECT Branch, Product_line, ROUND(SUM(Unit_price*Quantity),0) AS Revenue_Per_Product_line
+FROM sales.supermarket_sales_1
+GROUP BY 1,2
+Order By 3 DESC
+
+WITH -- For the Supermarket 'A'
+  revenue_product AS (
+  SELECT
+    Product_line,
+    ROUND(SUM(Unit_price*Quantity),0) AS Revenue_Per_Product_line
+  FROM
+   sales.supermarket_sales_1
+   WHERE Branch='A'
+  GROUP BY
+    1)
+  -- Main Query
+SELECT
+  *,
+  SUM(Revenue_Per_Product_line) OVER() AS total_revenue,
+  SAFE_DIVIDE(Revenue_Per_Product_line,SUM(Revenue_Per_Product_line) OVER()) AS share_revenue
+FROM
+   revenue_product
+ORDER BY
+  share_revenue DESC
+
+WITH -- For the Supermarket 'B'
+  revenue_product AS (
+  SELECT
+    Product_line,
+    ROUND(SUM(Unit_price*Quantity),0) AS Revenue_Per_Product_line
+  FROM
+   sales.supermarket_sales_1
+   WHERE Branch='B'
+  GROUP BY
+    1)
+  -- Main Query
+SELECT
+  *,
+  SUM(Revenue_Per_Product_line) OVER() AS total_revenue,
+  SAFE_DIVIDE(Revenue_Per_Product_line,SUM(Revenue_Per_Product_line) OVER()) AS share_revenue
+FROM
+   revenue_product
+ORDER BY
+  share_revenue DESC
+
+WITH -- For the Supermarket 'C'
+  revenue_product AS (
+  SELECT
+    Product_line,
+    ROUND(SUM(Unit_price*Quantity),0) AS Revenue_Per_Product_line
+  FROM
+   sales.supermarket_sales_1
+   WHERE Branch='C'
+  GROUP BY
+    1)
+  -- Main Query
+SELECT
+  *,
+  SUM(Revenue_Per_Product_line) OVER() AS total_revenue,
+  SAFE_DIVIDE(Revenue_Per_Product_line,SUM(Revenue_Per_Product_line) OVER()) AS share_revenue
+FROM
+   revenue_product
+ORDER BY share_revenue DESC
+
+--Contribution of each product line to revenue over time for each supermarket for the following product line - 'Home and lifestyle','Food and beverages','Electronic accessories'.
+
+WITH -- for the Supermarket 'A'
+  revenue_product AS (
+  SELECT
+    Product_line,
+    DATE(DATE_TRUNC(date,MONTH)) AS Purchase_month,
+    ROUND(SUM(Unit_price*Quantity),0) AS revenue_per_Product_line
+  FROM
+    sales.supermarket_sales_1
+    Where Branch='A'
+  GROUP BY
+    1,
+    2)
+  -- Main Query
+SELECT
+  *
+FROM (
+  SELECT
+    *,
+    SAFE_DIVIDE(revenue_per_Product_line,
+      SUM(revenue_per_Product_line) OVER(PARTITION BY Purchase_month)) AS ratio
+  FROM
+    revenue_product) a 
+WHERE
+  Product_line IN ('Home and lifestyle',
+    'Food and beverages',
+    'Electronic accessories')
+Order by 2
+
+WITH -- for the Supermarket 'B'
+  revenue_product AS (
+  SELECT
+    Product_line,
+    DATE(DATE_TRUNC(date,MONTH)) AS Purchase_month,
+    ROUND(SUM(Unit_price*Quantity),0) AS revenue_per_Product_line
+  FROM
+    sales.supermarket_sales_1
+    Where Branch='B'
+  GROUP BY
+    1,
+    2)
+  -- Main Query
+SELECT
+  *
+FROM (
+  SELECT
+    *,
+    SAFE_DIVIDE(revenue_per_Product_line,
+      SUM(revenue_per_Product_line) OVER(PARTITION BY Purchase_month)) AS ratio
+  FROM
+    revenue_product) a 
+WHERE
+  Product_line IN ('Home and lifestyle',
+    'Food and beverages',
+    'Electronic accessories')
+Order by 2
+
+WITH -- for the Supermarket 'C'
+  revenue_product AS (
+  SELECT
+    Product_line,
+    DATE(DATE_TRUNC(date,MONTH)) AS Purchase_month,
+    ROUND(SUM(Unit_price*Quantity),0) AS revenue_per_Product_line
+  FROM
+    sales.supermarket_sales_1
+    Where Branch='C'
+  GROUP BY
+    1,
+    2)
+  -- Main Query
+SELECT
+  *
+FROM (
+  SELECT
+    *,
+    SAFE_DIVIDE(revenue_per_Product_line,
+      SUM(revenue_per_Product_line) OVER(PARTITION BY Purchase_month)) AS ratio
+  FROM
+    revenue_product) a 
+WHERE
+  Product_line IN ('Home and lifestyle',
+    'Food and beverages',
+    'Electronic accessories')
+Order by 2
 
 
 
