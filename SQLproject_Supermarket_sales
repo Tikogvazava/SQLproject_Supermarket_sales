@@ -241,5 +241,9 @@ WHERE
     'Electronic accessories')
 Order by 2
 
+-- Looking at customers vs purchased quantities over time 
+SELECT Invoice_ID, Branch, Date, Time, Quantity, SUM(Quantity) OVER (Partition BY Branch order by Branch, Date, Time) AS RollingQUantitySold 
+FROM sales.supermarket_sales_1
+Order by 2,3,4 
 
 
